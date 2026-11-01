@@ -1,0 +1,45 @@
+{
+  "name": "react-implementations",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "React and TypeScript patterns, one small tested demo per concept",
+  "scripts": {
+    "dev": "vite --port 5400",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 5400 --strictPort",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "bench": "node scripts/measure.mjs"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.13.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-redux": "^9.3.1",
+    "react-router-dom": "^6.30.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.4.15",
+    "typescript": "5.6",
+    "typescript-eslint": "^8.72.1",
+    "vite": "^5.4.21"
+  }
+}
