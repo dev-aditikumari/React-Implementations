@@ -1,10 +1,9 @@
-import { Profiler, memo, useMemo, useRef, useState, type ProfilerOnRenderCallback } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 type Variant = 'slow' | 'optimised';
 
 export interface Result {
-  actualMs: number;
   wallMs: number;
 }
 
@@ -44,12 +43,12 @@ const FastList = memo(function FastList({ items }: { items: string[] }) {
   );
 });
 
-function Host({ variant, items, tick, onRender }: { variant: Variant; items: string[]; tick: number; onRender: ProfilerOnRenderCallback }) {
+function Host({ variant, items, tick }: { variant: Variant; items: string[]; tick: number }) {
   return (
-    <Profiler id={variant} onRender={onRender}>
+    <>
       <p>Parent ticks: {tick}</p>
       {variant === 'slow' ? <SlowList items={items} /> : <FastList items={items} />}
-    </Profiler>
+    </>
   );
 }
 
@@ -64,11 +63,6 @@ export function Benchmark({ rows = 1500, ticks = 30 }: BenchmarkProps) {
   const [tick, setTick] = useState(0);
   const [results, setResults] = useState<Partial<Record<Variant, Result>>>({});
   const [running, setRunning] = useState(false);
-  const actual = useRef(0);
-
-  const onRender: ProfilerOnRenderCallback = (_id, phase, actualDuration) => {
-    if (phase === 'update') actual.current += actualDuration;
-  };
 
   const measure = (variant: Variant): Result => {
     flushSync(() => {
@@ -76,10 +70,9 @@ export function Benchmark({ rows = 1500, ticks = 30 }: BenchmarkProps) {
       setTick(0);
     });
     flushSync(() => setActive(variant));
-    actual.current = 0;
     const start = performance.now();
     for (let i = 1; i <= ticks; i++) flushSync(() => setTick(i));
-    return { actualMs: actual.current, wallMs: performance.now() - start };
+    return { wallMs: performance.now() - start };
   };
 
   const run = async () => {
@@ -106,23 +99,21 @@ export function Benchmark({ rows = 1500, ticks = 30 }: BenchmarkProps) {
         {running ? 'Running...' : 'Run comparison'}
       </button>
       <div className="bench-stage" aria-hidden="true">
-        {active && <Host variant={active} items={items} tick={tick} onRender={onRender} />}
+        {active && <Host variant={active} items={items} tick={tick} />}
       </div>
       {results.slow && results.optimised && (
         <table>
-          <caption>Total for {ticks} parent updates (milliseconds)</caption>
+          <caption>Total for {ticks} synchronous parent updates, including commit (milliseconds)</caption>
           <thead>
             <tr>
               <th scope="col">Version</th>
-              <th scope="col">Profiler actualDuration</th>
-              <th scope="col">Wall time (performance.now)</th>
+              <th scope="col">Time (performance.now)</th>
             </tr>
           </thead>
           <tbody>
             {(['slow', 'optimised'] as const).map((v) => (
               <tr key={v}>
                 <th scope="row">{v}</th>
-                <td data-testid={`${v}-actual`}>{fmt(results[v]!.actualMs)}</td>
                 <td data-testid={`${v}-wall`}>{fmt(results[v]!.wallMs)}</td>
               </tr>
             ))}

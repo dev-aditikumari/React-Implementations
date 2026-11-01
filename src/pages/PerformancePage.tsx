@@ -41,7 +41,7 @@ export function PerformancePage() {
       <Demo title="Virtualised list (10,000 rows)" when="A long list where most rows are off screen. Only the visible rows plus a small overscan are in the DOM.">
         <VirtualList total={10000} itemHeight={32} height={240} label="Ten thousand rows" renderItem={(i) => <span>Row {i + 1}</span>} />
       </Demo>
-      <Demo title="Measured: slow against optimised" when="Before and after comparisons. This uses the React Profiler and performance.now. Results depend on the machine and browser.">
+      <Demo title="Measured: slow against optimised" when="Before and after comparisons. This uses the performance.now around synchronous updates. Results depend on the machine and browser.">
         <Benchmark />
       </Demo>
     </>

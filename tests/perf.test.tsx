@@ -44,7 +44,7 @@ describe('Benchmark', () => {
     await user.click(screen.getByRole('button', { name: 'Run comparison' }));
     const slow = await screen.findByTestId('slow-wall');
     expect(Number(slow.textContent)).toBeGreaterThanOrEqual(0);
-    expect(Number(screen.getByTestId('optimised-actual').textContent)).toBeGreaterThanOrEqual(0);
+    expect(Number(screen.getByTestId('optimised-wall').textContent)).toBeGreaterThanOrEqual(0);
     expect(screen.getByRole('button', { name: 'Run comparison' })).toBeEnabled();
   });
 });
